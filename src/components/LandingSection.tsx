@@ -17,20 +17,35 @@ export const MobileLandingSection = () => {
           <div className="heading" style={{ marginBottom: "24px" }}>
             Vedeesh Bali
           </div>
-          <div className="body">
+          <div className="body" style={{ maxWidth: "25ch" }}>
             front-end engineer <i className="lab la-react" /> who enjoys
             photography <i className="las la-camera" /> on the side.
           </div>
         </div>
         <div className="icon-flex" style={{ marginBottom: "2rem" }}>
           <div className="link">
-            <div className="text">email</div>
+            <div
+              className="text"
+              style={{ fontSize: "14px", lineHeight: "22px" }}
+            >
+              email
+            </div>
           </div>
           <div className="link">
-            <div className="text">website</div>
+            <div
+              className="text"
+              style={{ fontSize: "14px", lineHeight: "22px" }}
+            >
+              website
+            </div>
           </div>
           <div className="link">
-            <div className="text">linkedin</div>
+            <div
+              className="text"
+              style={{ fontSize: "14px", lineHeight: "22px" }}
+            >
+              linkedin
+            </div>
           </div>
         </div>
       </div>
