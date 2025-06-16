@@ -17,6 +17,11 @@ img {
   margin-bottom: 44px;
 }
 
+.active {
+  text-decoration: underline;
+  color: #403f3c;
+}
+
 .body {
   font-size: 16px;
   line-height: 24px;
@@ -57,6 +62,8 @@ img {
   flex-direction: row;
   gap: 12px;
   justify-content: flex-end;
+  color: #7e7c76;
+  cursor: pointer;
 }
 
 .text {

@@ -9,12 +9,12 @@ type TabProps = {
 const Tabs = ({ activeTab, setActiveTab }: TabProps) => {
   const categories: CategoryName[] = ["nature", "travel", "sport"];
   return (
-    <div className="body links">
+    <div className="links">
       {categories.map((category, key) => (
         <div
           key={key}
           onClick={() => setActiveTab(category)}
-          className={activeTab === category ? `${category}-active` : category}
+          className={activeTab === category ? `${category} active` : category}
         >
           {category}
         </div>

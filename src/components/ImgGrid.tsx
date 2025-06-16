@@ -199,7 +199,7 @@ function ImgGrid() {
   const [currentCategory, setCurrentCategory] =
     useState<CategoryName>("nature");
 
-  const isDesktop = useMediaQuery({ minWidth: 768 });
+  const isDesktop = useMediaQuery({ minWidth: 1024 });
 
   const desktopImgs = imageSets[currentCategory].map((img, key) => (
     <img
@@ -211,7 +211,7 @@ function ImgGrid() {
   ));
 
   const mobileImgs = (
-    <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+    <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
       {imageSets[currentCategory].map((img, key) => (
         <img src={img.src} alt={img.alt} key={key} />
       ))}
