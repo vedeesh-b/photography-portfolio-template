@@ -1,7 +1,7 @@
 import "./components.css";
 import { gridPlacements } from "./GridPlacement";
-
-import headshot from "../assets/headshot.webp";
+import { useState } from "react";
+import { useMediaQuery } from "react-responsive";
 
 import fuji from "../assets/jpn_fuji.webp";
 import peacock from "../assets/cz_peacock.webp";
@@ -41,7 +41,7 @@ import klr_batting from "../assets/gb_klr_batting.webp";
 import piastri from "../assets/bcn_piastri.webp";
 import ybj from "../assets/gb_ybj_batting.webp";
 import Tabs from "./Tabs";
-import { useState } from "react";
+import LandingSection, { MobileLandingSection } from "./LandingSection";
 
 const imageSets = {
   nature: [
@@ -199,54 +199,43 @@ function ImgGrid() {
   const [currentCategory, setCurrentCategory] =
     useState<CategoryName>("nature");
 
+  const isDesktop = useMediaQuery({ minWidth: 768 });
+
+  const desktopImgs = imageSets[currentCategory].map((img, key) => (
+    <img
+      src={img.src}
+      alt={img.alt}
+      key={key}
+      style={{ gridArea: gridPlacements[key] }}
+    />
+  ));
+
+  const mobileImgs = (
+    <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+      {imageSets[currentCategory].map((img, key) => (
+        <img src={img.src} alt={img.alt} key={key} />
+      ))}
+    </div>
+  );
+
   return (
     <div id="page-layout">
-      <div id="grid-container">
-        <div className="grid-elem headshot">
-          <img src={headshot} alt="Headshot" />
-        </div>
-        <div className="grid-elem sm">
-          <div className="text-flex">
-            <div>
-              <div className="heading">Vedeesh Bali</div>
-              <div className="body">
-                front-end engineer <i className="lab la-react" /> who enjoys
-                photography <i className="las la-camera" /> on the side.
-              </div>
-            </div>
-            <div className="icon-flex">
-              <div className="link">
-                <div className="text">email</div>
-              </div>
-              <div className="link">
-                <div className="text">website</div>
-              </div>
-              <div className="link">
-                <div className="text">linkedin</div>
-              </div>
-            </div>
-          </div>
-        </div>
+      <div id={isDesktop ? "grid-container" : ""}>
+        {isDesktop ? <LandingSection /> : <MobileLandingSection />}
         <div
           className="text-flex"
           style={{
             gridArea: "4 / 1 / span 1 / span 4",
-            height: "180px",
+            height: isDesktop ? "180px" : "100px",
             alignItems: "stretch",
             justifyContent: "space-between",
+            marginBottom: isDesktop ? "0px" : "1rem",
           }}
         >
           <div className="body">Based in London, United Kingdom</div>
           <Tabs activeTab={currentCategory} setActiveTab={setCurrentCategory} />
         </div>
-        {imageSets[currentCategory].map((img, key) => (
-          <img
-            src={img.src}
-            alt={img.alt}
-            key={key}
-            style={{ gridArea: gridPlacements[key] }}
-          />
-        ))}
+        {isDesktop ? desktopImgs : mobileImgs}
       </div>
     </div>
   );
