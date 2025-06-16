@@ -56,8 +56,8 @@ export const MobileLandingSection = () => {
 const LandingSection = () => {
   return (
     <>
-      <div className="grid-elem headshot">
-        <img src={headshot} alt="Headshot" />
+      <div className="grid-elem" id="headshot">
+        <img fetchPriority="high" src={headshot} alt="Headshot" />
       </div>
       <div className="grid-elem sm">
         <div className="text-flex">

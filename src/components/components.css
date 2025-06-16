@@ -72,15 +72,15 @@ img {
   text-decoration: underline;
 }
 
-.headshot {
-  height: calc(100vh - 2rem);
-  grid-area: 1 / 1 / span 3 / span 4;
-}
-
 .sm {
   grid-row: span 2;
   grid-column: span 2;
   display: flex;
+}
+
+#headshot {
+  height: calc(100vh - 2rem);
+  grid-area: 1 / 1 / span 3 / span 4;
 }
 
 #page-layout {
