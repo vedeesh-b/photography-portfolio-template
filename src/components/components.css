@@ -4,6 +4,10 @@ img {
   object-fit: cover;
 }
 
+a {
+  color: #403f3c;
+}
+
 .grid-elem {
   height: 100%;
   width: 100%;
@@ -69,7 +73,6 @@ img {
 .text {
   font-size: 12px;
   line-height: 18px;
-  text-decoration: underline;
 }
 
 .sm {

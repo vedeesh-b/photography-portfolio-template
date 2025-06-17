@@ -70,13 +70,29 @@ const LandingSection = () => {
           </div>
           <div className="icon-flex">
             <div className="link">
-              <div className="text">email</div>
+              <div className="text">
+                <a href="mailto:vedeesh18@gmail.com">email</a>
+              </div>
             </div>
             <div className="link">
-              <div className="text">website</div>
+              <div className="text">
+                <a
+                  href="https://k20012691.github.io/personal-site/"
+                  target="_blank"
+                >
+                  website
+                </a>
+              </div>
             </div>
             <div className="link">
-              <div className="text">linkedin</div>
+              <div className="text">
+                <a
+                  href="https://www.linkedin.com/in/vedeesh-bali/"
+                  target="_blank"
+                >
+                  linkedin
+                </a>
+              </div>
             </div>
           </div>
         </div>
