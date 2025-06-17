@@ -13,3 +13,31 @@ export const gridPlacements = [
   "15 / 7 / span 2 / span 2",
   "17 / 3 / span 2 / span 4",
 ];
+
+const ImgSize = {
+  small: {
+    width: "303px",
+  },
+  medium: {
+    width: "462px",
+  },
+  large: {
+    width: "622px",
+  },
+};
+
+export const imgSizes = [
+  ImgSize.small,
+  ImgSize.small,
+  ImgSize.medium,
+  ImgSize.small,
+  ImgSize.small,
+  ImgSize.large,
+  ImgSize.large,
+  ImgSize.medium,
+  ImgSize.medium,
+  ImgSize.large,
+  ImgSize.medium,
+  ImgSize.small,
+  ImgSize.large,
+];

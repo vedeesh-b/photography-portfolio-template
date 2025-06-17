@@ -1,6 +1,6 @@
 import "./components.css";
-import { gridPlacements } from "./GridPlacement";
-import { useState } from "react";
+import { gridPlacements, imgSizes } from "./GridPlacement";
+import { useEffect, useState } from "react";
 import { useMediaQuery } from "react-responsive";
 
 import fuji from "../assets/jpn_fuji.webp";
@@ -199,21 +199,46 @@ function ImgGrid() {
   const [currentCategory, setCurrentCategory] =
     useState<CategoryName>("nature");
 
+  const [currentImages, setCurrentImages] = useState<ImageSetType>([]);
+
   const isDesktop = useMediaQuery({ minWidth: 1024 });
 
-  const desktopImgs = imageSets[currentCategory].map((img, key) => (
+  useEffect(() => {
+    async function loadImages() {
+      let images: ImageSetType = [];
+      switch (currentCategory) {
+        case "nature":
+          images = (await import("./img/NatureImages")).default;
+          break;
+        case "travel":
+          images = (await import("./img/TravelImages")).default;
+          break;
+        case "sport":
+          images = (await import("./img/SportImages")).default;
+          break;
+      }
+      setCurrentImages(images);
+    }
+
+    loadImages();
+  }, [currentCategory]);
+
+  const desktopImgs = currentImages.map((img, key) => (
     <img
       src={img.src}
       alt={img.alt}
       key={key}
+      width={imgSizes[key].width}
+      loading={currentCategory === "nature" ? "eager" : "lazy"}
+      fetchPriority={currentCategory === "nature" ? "high" : "auto"}
       style={{ gridArea: gridPlacements[key] }}
     />
   ));
 
   const mobileImgs = (
     <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
-      {imageSets[currentCategory].map((img, key) => (
-        <img src={img.src} alt={img.alt} key={key} />
+      {currentImages.map((img, key) => (
+        <img src={img.src} alt={img.alt} key={key} loading="lazy" />
       ))}
     </div>
   );
