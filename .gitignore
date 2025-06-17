@@ -23,3 +23,5 @@ lighthouse
 *.njsproj
 *.sln
 *.sw?
+
+.vercel
