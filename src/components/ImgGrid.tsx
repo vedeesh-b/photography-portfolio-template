@@ -37,21 +37,29 @@ function ImgGrid() {
   }, [currentCategory]);
 
   const desktopImgs = currentImages.map((img, key) => (
-    <img
-      src={img.src}
-      alt={img.alt}
+    <div
+      data-aos="fade-in"
       key={key}
-      width={imgSizes[key].width}
-      loading={currentCategory === "nature" ? "eager" : "lazy"}
-      fetchPriority={currentCategory === "nature" ? "high" : "auto"}
       style={{ gridArea: gridPlacements[key] }}
-    />
+      data-aos-once="true"
+    >
+      <img
+        src={img.src}
+        alt={img.alt}
+        width={imgSizes[key].width}
+        loading={currentCategory === "nature" ? "eager" : "lazy"}
+        fetchPriority={currentCategory === "nature" ? "high" : "auto"}
+        style={{ height: "100%" }}
+      />
+    </div>
   ));
 
   const mobileImgs = (
     <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
       {currentImages.map((img, key) => (
-        <img src={img.src} alt={img.alt} key={key} loading="lazy" />
+        <div data-aos="fade-in" key={key}>
+          <img src={img.src} alt={img.alt} loading="lazy" />
+        </div>
       ))}
     </div>
   );
