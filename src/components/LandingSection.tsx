@@ -36,10 +36,7 @@ export const MobileLandingSection = () => {
               className="text"
               style={{ fontSize: "14px", lineHeight: "22px" }}
             >
-              <a
-                href="https://k20012691.github.io/personal-site/"
-                target="_blank"
-              >
+              <a href="https://www.vedeeshbali.com" target="_blank">
                 website
               </a>
             </div>
