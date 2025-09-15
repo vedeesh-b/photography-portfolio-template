@@ -10,10 +10,43 @@
       href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,600&display=swap"
       rel="stylesheet"
     />
+    <link
+      rel="preload"
+      as="image"
+      href="/src/assets/headshot.webp"
+      type="image/webp"
+      fetchpriority="high"
+    />
+    <meta
+      name="description"
+      content="Explore the photography portfolio of Vedeesh Bali, a front-end engineer with an interest in photography — showcasing nature, travel, and sport through a unique lens. Based in London, capturing moments worldwide."
+    />
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
     <title>Vedeesh Bali Photography</title>
   </head>
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+    <script>
+      AOS.init({
+        disable: false,
+        startEvent: "DOMContentLoaded",
+        initClassName: "aos-init",
+        animatedClassName: "aos-animate",
+        useClassNames: false,
+        disableMutationObserver: false,
+        debounceDelay: 50,
+        throttleDelay: 99,
+
+        offset: 120,
+        delay: 0,
+        duration: 400,
+        easing: "ease",
+        once: true,
+        mirror: false,
+        anchorPlacement: "top",
+      });
+    </script>
   </body>
 </html>
