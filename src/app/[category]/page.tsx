@@ -1,4 +1,3 @@
-import { Button } from "@headlessui/react";
 import { use } from "react";
 
 export default function CategoryPage({
