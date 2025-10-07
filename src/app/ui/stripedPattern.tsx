@@ -1,15 +1,8 @@
-type BoxPropsType = {
-  width: number;
-  height: number;
-};
-
-export default function StripedBox({ width, height }: BoxPropsType) {
+export default function StripedBox() {
   return (
     <svg
-      width={width}
-      height={height}
       xmlns="http://www.w3.org/2000/svg"
-      className="text-[#ABA8A2]"
+      className="text-[#ABA8A2] relative w-full h-13"
     >
       <defs>
         <pattern

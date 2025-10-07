@@ -9,7 +9,7 @@ export default function CustomCursor() {
 
   return (
     <>
-      {mouseX && mouseY && (
+      {mouseX !== null && mouseY !== null && (
         <motion.div
           className="pointer-events-none fixed top-0 left-0 z-50 -translate-[25%]"
           animate={{
@@ -18,7 +18,7 @@ export default function CustomCursor() {
           }}
           transition={{ type: "spring", ease: "backOut", duration: 0.5 }}
         >
-          <Image src={"/cursor.svg"} alt="Cursor" width={32} height={32} />
+          <Image src={"/cursor (2).svg"} alt="Cursor" width={40} height={40} />
         </motion.div>
       )}
     </>

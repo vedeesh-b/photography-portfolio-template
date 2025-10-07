@@ -6,6 +6,7 @@ module.exports = {
   content: [
     "./node_modules/@heroui/theme/dist/components/(button|ripple|spinner).js",
   ],
+  safelist: ["col-span-3"],
   theme: {
     extend: {
       fontFamily: {
