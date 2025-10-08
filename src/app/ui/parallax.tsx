@@ -5,7 +5,7 @@ import Image from "next/image";
 import { useRef, useState } from "react";
 import useParallax from "../lib/useParallax";
 import Link from "next/link";
-import useMousePosition from "../lib/useMousePosition";
+import CustomCursor from "./customCursor";
 
 type ParallaxItemType = {
   src: string;
@@ -33,7 +33,12 @@ function ParallaxItem({
       className="w-full h-auto snap-center flex items-center justify-center"
     >
       <Link href={href} className="group relative block">
-        <motion.div style={{ y }} onMouseEnter={onHover} onMouseLeave={onLeave}>
+        <motion.div
+          style={{ y }}
+          onMouseEnter={onHover}
+          onMouseLeave={onLeave}
+          className="cursor-none"
+        >
           <Image
             src={src}
             alt={title}
@@ -73,24 +78,11 @@ export default function Parallax() {
     },
   ];
 
-  const { mouseX, mouseY } = useMousePosition();
   const [hoverCategory, setHoverCategory] = useState("");
 
   return (
     <div className="w-full h-auto snap-y snap-mandatory scroll-smooth">
-      {hoverCategory && mouseX !== null && mouseY !== null && (
-        <motion.div
-          className="pointer-events-none fixed top-0 left-0 z-50 -translate-[25%]"
-          initial={false}
-          animate={{
-            x: mouseX,
-            y: mouseY,
-          }}
-          transition={{ type: "spring", ease: "backOut", duration: 0.5 }}
-        >
-          <span>{hoverCategory}</span>
-        </motion.div>
-      )}
+      <CustomCursor hoverCategory={hoverCategory} />
       {images.map((img, id) => (
         <ParallaxItem
           key={id}

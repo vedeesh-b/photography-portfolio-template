@@ -38,6 +38,7 @@ export default function CategoryPage({ params }: CategoryPageProps) {
                 alt={img.title}
                 fill
                 className="object-cover"
+                sizes="(max-width: 768px) 100vw, 33vw"
               />
             </div>
             <div className="flex justify-between text-sm mt-2">
