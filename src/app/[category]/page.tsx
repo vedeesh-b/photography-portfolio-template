@@ -29,7 +29,7 @@ export default function CategoryPage({ params }: CategoryPageProps) {
       <p className="text-[14px] *:mb-[14px]">
         {categoryGallery.pageDescription}
       </p>
-      <div className="grid grid-cols-6 gap-6 auto-rows-fr">
+      <div className="grid grid-cols-6 gap-8 auto-rows-fr">
         {categoryGallery.imgs?.map((img) => (
           <div className={`col-span-${img.span} relative`} key={img.key}>
             <div className="w-full h-[300px] relative">

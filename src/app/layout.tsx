@@ -4,7 +4,6 @@ import "./globals.css";
 import Navbar from "./ui/navbar";
 import Sidebar from "./ui/sidebar";
 import Footer from "./ui/footer";
-import CustomCursor from "./ui/customCursor";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -31,7 +30,6 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable} ${playfair.variable}`}>
       <body className="antialiased bg-background text-foreground flex flex-col">
-        {/* <CustomCursor /> */}
         <Navbar />
         <div className="flex flex-row">
           <Sidebar />

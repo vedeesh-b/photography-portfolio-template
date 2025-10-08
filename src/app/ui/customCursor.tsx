@@ -7,7 +7,7 @@ import Image from "next/image";
 export default function CustomCursor({
   hoverCategory,
 }: {
-  hoverCategory: String;
+  hoverCategory: string;
 }) {
   const { mouseX, mouseY } = useMousePosition();
 
