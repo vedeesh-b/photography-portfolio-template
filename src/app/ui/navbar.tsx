@@ -1,14 +1,19 @@
+"use client";
+
 import Link from "next/link";
+import { motion } from "motion/react";
 
 export default function Navbar() {
   const menuItems = [
     {
-      title: "About",
-      id: "about",
+      title: "Email",
+      id: "email",
+      href: "mailto:vedeesh18@gmail.com",
     },
     {
-      title: "Contact",
-      id: "contact",
+      title: "LinkedIn",
+      id: "linkedin",
+      href: "https://www.linkedin.com/in/vedeesh-bali/",
     },
   ];
 
@@ -16,11 +21,41 @@ export default function Navbar() {
     <div className="flex flex-row justify-center items-center py-5 px-10 border-b-[0.25px] border-b-[#ABA8A2]">
       <div className="w-1/3" />
       <div className="w-1/3 flex justify-center font-bold text-[20px] tracking-tight text-[#000000]">
-        <Link href={"/"}>VB</Link>
+        <Link href="/" className="overflow-hidden relative inline-block">
+          <motion.div
+            className="relative inline-block"
+            initial="initial"
+            whileHover="hover"
+            transition={{ duration: 0.3 }}
+          >
+            <motion.span
+              className="block"
+              variants={{
+                initial: { y: 0 },
+                hover: { y: "100%" },
+              }}
+              transition={{ duration: 0.3 }}
+            >
+              VB
+            </motion.span>
+            <motion.span
+              className="block absolute left-0 top-0"
+              variants={{
+                initial: { y: "-100%" },
+                hover: { y: 0 },
+              }}
+              transition={{ duration: 0.4 }}
+            >
+              VB
+            </motion.span>
+          </motion.div>
+        </Link>
       </div>
       <div className="w-1/3 flex justify-end text-[14px] gap-6 font-medium">
         {menuItems.map((item) => (
-          <div key={item.id}>{item.title}</div>
+          <Link key={item.id} href={item.href}>
+            {item.title}
+          </Link>
         ))}
       </div>
     </div>

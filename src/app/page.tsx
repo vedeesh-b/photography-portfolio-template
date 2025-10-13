@@ -1,32 +1,39 @@
+"use client";
+
 import Image from "next/image";
 import Parallax from "./ui/parallax";
 import StripedBox from "./ui/stripedPattern";
+import Link from "next/link";
+import { motion } from "motion/react";
 
 export default function Home() {
   const quote =
     "I’m drawn to subjects characterised by energy and unpredictability. Recently, this has expanded to include the unique composition and perspective offered by cityscapes and architecture.";
 
+  const source =
+    "https://kj36h7e7wv1p9gx0.public.blob.vercel-storage.com/images";
+
   const images = [
     {
-      title: "Nature",
-      src: "https://kj36h7e7wv1p9gx0.public.blob.vercel-storage.com/images/cz_peacock.webp",
-      id: "002",
+      category: "Nature",
+      src: `${source}/cz_peacock.webp`,
       width: 230,
       height: 300,
+      href: "/nature",
     },
     {
-      title: "Sport",
-      src: "https://kj36h7e7wv1p9gx0.public.blob.vercel-storage.com/images/gb_kn_duck.webp",
-      id: "016",
+      category: "Sport",
+      src: `${source}/gb_kn_duck.webp`,
       width: 230,
       height: 300,
+      href: "/sport",
     },
     {
-      title: "Travel",
-      src: "https://kj36h7e7wv1p9gx0.public.blob.vercel-storage.com/images/jpn_bamboo.webp",
-      id: "029",
+      category: "Travel",
+      src: `${source}/jpn_bamboo.webp`,
       width: 600,
       height: 450,
+      href: "/travel",
     },
   ];
 
@@ -34,18 +41,30 @@ export default function Home() {
     <div className="p-9">
       <div className="grid grid-cols-8 gap-8 items-stretch mb-[15vh]">
         {images.map((img, i) => (
-          <div
-            key={img.id}
+          <Link
+            href={img.href}
+            key={i}
+            prefetch
             className={`flex flex-col ${
               i === 2 ? "col-span-4" : "col-span-2"
             } justify-end`}
           >
-            <Image {...img} alt={img.title} className="w-full object-contain" />
+            <motion.div
+              whileHover={{
+                scale: 0.99,
+                transition: { duration: 0.3, type: "tween", ease: "easeInOut" },
+              }}
+            >
+              <Image
+                {...img}
+                alt={img.category}
+                className="w-full object-contain"
+              />
+            </motion.div>
             <div className="flex justify-between w-full text-sm mt-2">
-              <span className="text-[#000000]">{img.title}</span>
-              <span className="text-[#807D79]">{img.id}</span>
+              <span className="text-[#000000]">{img.category}</span>
             </div>
-          </div>
+          </Link>
         ))}
       </div>
       <div className="font-serif font-medium leading-[40px] tracking-[-0.025em] text-[#403F3C] text-[30px] mb-[5vh] z-100">
