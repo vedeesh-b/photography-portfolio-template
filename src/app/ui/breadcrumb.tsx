@@ -27,8 +27,7 @@ export default function Breadcrumbs({ current }: { current: string }) {
       >
         <Link href="/">home</Link>
       </motion.div>
-
-      <div>//</div>
+      <div>\\</div>
       <div className="flex flex-row gap-1.5">
         {categories.map((category) => (
           <motion.div
