@@ -1,3 +1,5 @@
+"use client";
+
 import Image from "next/image";
 import StripedBox from "./stripedPattern";
 import { useMediaQuery } from "react-responsive";
@@ -9,6 +11,8 @@ export default function Sidebar() {
     desc: "A front-end software engineer with an interest in photography spanning nature, sport, and landscapes.",
     location: "Based in London, UK.",
   };
+
+  const isDesktop = useMediaQuery({ query: "(min-width: 768px)" });
 
   return (
     <div
@@ -31,17 +35,19 @@ export default function Sidebar() {
         <p>{content.desc}</p>
         <p>{content.location}</p>
       </div>
-      <div className="absolute -bottom-40 left-0 grid grid-cols-6 w-88">
-        <div className="col-span-5">
-          <StripedBox />
+      {isDesktop && (
+        <div className="absolute -bottom-40 left-0 grid grid-cols-6 w-88">
+          <div className="col-span-5">
+            <StripedBox />
+          </div>
+          <div className="col-span-2 col-start-6 row-start-4">
+            <StripedBox />
+          </div>
+          <div className="col-start-5 row-start-6">
+            <StripedBox />
+          </div>
         </div>
-        <div className="col-span-2 col-start-6 row-start-4">
-          <StripedBox />
-        </div>
-        <div className="col-start-5 row-start-6">
-          <StripedBox />
-        </div>
-      </div>
+      )}
     </div>
   );
 }

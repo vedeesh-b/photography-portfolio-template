@@ -21,7 +21,7 @@ export default function Navbar() {
   const isDesktop = useMediaQuery({ query: "(min-width: 768px)" });
 
   return (
-    <div className="flex flex-row justify-center items-center py-6 px-12 border-b-[0.25px] border-b-[#ABA8A2]">
+    <div className="flex flex-row justify-center items-center py-3 md:py-6 px-12 border-b-[0.25px] border-b-[#ABA8A2]">
       <div className="w-1/3" />
       <div className="w-1/3 flex justify-center font-bold text-[22px] tracking-tight text-[#000000]">
         <Link href="/" className="overflow-hidden relative inline-block">
