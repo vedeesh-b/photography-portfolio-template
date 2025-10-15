@@ -22,16 +22,22 @@ export default function CategoryPage({ params }: CategoryPageProps) {
 
   const categoryGallery = galleries[category];
 
+  const spanClassMap: Record<number, string> = {
+    2: "md:col-span-2",
+    3: "md:col-span-3",
+    4: "md:col-span-4",
+  };
+
   return (
     <div className="p-9 w-full">
       <Breadcrumbs current={category} />
       <p className="font-sans font-semibold leading-[70px] tracking-[-0.05em] text-[#000] text-[70px] mb-[10vh]">
         {categoryGallery.pageTitle}
       </p>
-      <div className="flex flex-col gap-12 md:grid md:grid-cols-6 md:gap-8 md:auto-rows-fr">
+      <div className="sm:flex sm:flex-col sm:gap-12 md:grid md:grid-cols-6 md:gap-8 md:auto-rows-fr">
         {categoryGallery.imgs?.map((img) => (
           <div
-            className={`w-full md:col-span-${img.span} relative`}
+            className={`w-full ${spanClassMap[img.span]} relative`}
             key={img.key}
           >
             <div className="w-full h-[300px] relative">
