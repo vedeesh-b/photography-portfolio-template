@@ -1,0 +1,90 @@
+"use client";
+
+import { motion, useScroll, useTransform } from "framer-motion";
+import Link from "next/link";
+import Image from "next/image";
+import { useRef } from "react";
+
+const images = [
+  {
+    src: "https://kj36h7e7wv1p9gx0.public.blob.vercel-storage.com/images/goa_spice_plantation.webp",
+    title: "Nature",
+    href: "/nature",
+  },
+  {
+    src: "https://kj36h7e7wv1p9gx0.public.blob.vercel-storage.com/images/bcn_yuki.webp",
+    title: "Sport",
+    href: "/sport",
+  },
+  {
+    src: "https://kj36h7e7wv1p9gx0.public.blob.vercel-storage.com/images/cz_castle_view.webp",
+    title: "Travel",
+    href: "/travel",
+  },
+];
+
+export default function ScrollRevealCategories() {
+  const containerRef = useRef(null);
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start start", "end end"],
+  });
+
+  return (
+    <div ref={containerRef} className="relative h-[300vh] w-full">
+      {images.map((img, i) => {
+        const start = i * (1 / images.length);
+        const end = start + 1 / images.length;
+        const y = useTransform(scrollYProgress, [start, end], ["100%", "0%"]);
+        const labelY = useTransform(
+          scrollYProgress,
+          [start + 0.05, start + 0.25],
+          ["60%", "0%"]
+        );
+
+        return (
+          <motion.div
+            key={img.title}
+            style={{ y }}
+            className="sticky top-0 h-screen w-full flex items-center justify-center"
+            whileHover={{
+              scale: 1.02,
+              transition: { duration: 0.15, ease: "easeIn" },
+            }}
+          >
+            <Link
+              href={img.href}
+              className="group relative block w-full md:w-[60vw] h-[80vh] overflow-hidden shadow-xl"
+            >
+              <Image
+                src={img.src}
+                alt={img.title}
+                fill
+                className="object-cover brightness-75"
+                priority={i === 0}
+              />
+
+              {/* Label animation */}
+              <motion.div
+                style={{ y: labelY }}
+                transition={{
+                  type: "spring",
+                  stiffness: 150,
+                  damping: 20,
+                }}
+                className="absolute inset-0 flex items-center justify-center"
+              >
+                <span
+                  className="absolute inset-0 flex items-center justify-center text-white text-5xl font-bold mix-blend-difference font-serif font-medium transition-colors duration-300 
+             group-hover:text-white group-hover:mix-blend-lighten"
+                >
+                  {img.title}
+                </span>
+              </motion.div>
+            </Link>
+          </motion.div>
+        );
+      })}
+    </div>
+  );
+}

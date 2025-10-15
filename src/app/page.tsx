@@ -7,6 +7,7 @@ import Link from "next/link";
 import { motion } from "motion/react";
 import { useMediaQuery } from "react-responsive";
 import Sidebar from "./ui/sidebar";
+import ScrollRevealStack from "./ui/scrollStackReveal";
 
 export default function Home() {
   const quote =
@@ -95,7 +96,8 @@ export default function Home() {
           </div>
         </div>
       )}
-      <Parallax />
+      {/* <Parallax /> */}
+      <ScrollRevealStack />
     </div>
   );
 }
