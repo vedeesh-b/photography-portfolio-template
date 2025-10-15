@@ -4,6 +4,7 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
 import { useRef } from "react";
+import { MotionValue } from "framer-motion";
 
 const images = [
   {
@@ -32,59 +33,80 @@ export default function ScrollRevealCategories() {
 
   return (
     <div ref={containerRef} className="relative h-[300vh] w-full">
-      {images.map((img, i) => {
-        const start = i * (1 / images.length);
-        const end = start + 1 / images.length;
-        const y = useTransform(scrollYProgress, [start, end], ["100%", "0%"]);
-        const labelY = useTransform(
-          scrollYProgress,
-          [start + 0.05, start + 0.25],
-          ["60%", "0%"]
-        );
-
-        return (
-          <motion.div
-            key={img.title}
-            style={{ y }}
-            className="sticky top-0 h-screen w-full flex items-center justify-center"
-            whileHover={{
-              scale: 1.02,
-              transition: { duration: 0.15, ease: "easeIn" },
-            }}
-          >
-            <Link
-              href={img.href}
-              className="group relative block w-full md:w-[60vw] h-[80vh] overflow-hidden shadow-xl"
-            >
-              <Image
-                src={img.src}
-                alt={img.title}
-                fill
-                className="object-cover brightness-75"
-                priority={i === 0}
-              />
-
-              {/* Label animation */}
-              <motion.div
-                style={{ y: labelY }}
-                transition={{
-                  type: "spring",
-                  stiffness: 150,
-                  damping: 20,
-                }}
-                className="absolute inset-0 flex items-center justify-center"
-              >
-                <span
-                  className="absolute inset-0 flex items-center justify-center text-white text-5xl font-bold mix-blend-difference font-serif font-medium transition-colors duration-300 
-             group-hover:text-white group-hover:mix-blend-lighten"
-                >
-                  {img.title}
-                </span>
-              </motion.div>
-            </Link>
-          </motion.div>
-        );
-      })}
+      {images.map((img, i) => (
+        <CategoryCard
+          key={img.title}
+          img={img}
+          index={i}
+          total={images.length}
+          scrollYProgress={scrollYProgress}
+        />
+      ))}
     </div>
+  );
+}
+
+function CategoryCard({
+  img,
+  index,
+  total,
+  scrollYProgress,
+}: {
+  img: { src: string; title: string; href: string };
+  index: number;
+  total: number;
+  scrollYProgress: MotionValue<number>;
+}) {
+  // ✅ Hooks are now called directly inside a React component
+  const start = index * (1 / total);
+  const end = start + 1 / total;
+
+  const y = useTransform(scrollYProgress, [start, end], ["100%", "0%"]);
+  const labelY = useTransform(
+    scrollYProgress,
+    [start + 0.05, start + 0.25],
+    ["60%", "0%"]
+  );
+
+  return (
+    <motion.div
+      style={{ y }}
+      className="sticky top-0 h-screen w-full flex items-center justify-center"
+      whileHover={{
+        scale: 1.02,
+        transition: { duration: 0.15, ease: "easeIn" },
+      }}
+    >
+      <Link
+        href={img.href}
+        className="group relative block w-full md:w-[60vw] h-[80vh] overflow-hidden shadow-xl"
+      >
+        <Image
+          src={img.src}
+          alt={img.title}
+          fill
+          className="object-cover brightness-75"
+          priority={index === 0}
+        />
+
+        {/* Label animation */}
+        <motion.div
+          style={{ y: labelY }}
+          transition={{
+            type: "spring",
+            stiffness: 150,
+            damping: 20,
+          }}
+          className="absolute inset-0 flex items-center justify-center"
+        >
+          <span
+            className="absolute inset-0 flex items-center justify-center text-white text-5xl font-bold mix-blend-difference font-serif font-medium transition-colors duration-300 
+             group-hover:text-white group-hover:mix-blend-lighten"
+          >
+            {img.title}
+          </span>
+        </motion.div>
+      </Link>
+    </motion.div>
   );
 }

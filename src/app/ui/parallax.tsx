@@ -18,7 +18,6 @@ function ParallaxItem({ src, title, href }: ParallaxItemType) {
   const { scrollYProgress } = useScroll({ target: ref });
   const y = useParallax(scrollYProgress, 200);
   const yTitle = useParallax(scrollYProgress, 300);
-  const isMobile = useMediaQuery({ query: "(max-width: 768px)" });
 
   const containerHeight = "70vh";
 
