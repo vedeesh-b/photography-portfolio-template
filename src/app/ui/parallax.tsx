@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useRef } from "react";
 import useParallax from "../lib/useParallax";
 import Link from "next/link";
+import { useMediaQuery } from "react-responsive";
 
 type ParallaxItemType = {
   src: string;
@@ -17,13 +18,16 @@ function ParallaxItem({ src, title, href }: ParallaxItemType) {
   const { scrollYProgress } = useScroll({ target: ref });
   const y = useParallax(scrollYProgress, 200);
   const yTitle = useParallax(scrollYProgress, 300);
+  const isMobile = useMediaQuery({ query: "(max-width: 768px)" });
+
+  const containerHeight = isMobile ? "70vh" : "80vh";
 
   return (
     <div
       ref={ref}
       className="w-full h-auto snap-center flex items-center justify-center"
     >
-      <Link href={href} className="group relative block">
+      <Link href={href} className="group relative block w-full">
         <motion.div
           style={{ y }}
           whileHover={{
@@ -31,14 +35,18 @@ function ParallaxItem({ src, title, href }: ParallaxItemType) {
             transition: { duration: 0.15, ease: "easeIn" },
           }}
         >
-          <Image
-            src={src}
-            alt={title}
-            width={700}
-            height={0}
-            className="transition-all group-hover:brightness-75 duration-300"
-          />
-
+          <div
+            className="relative w-full overflow-hidden"
+            style={{ height: containerHeight }}
+          >
+            <Image
+              src={src}
+              alt={title}
+              fill
+              sizes="100vw"
+              className="object-cover transition-all group-hover:brightness-75 duration-300"
+            />
+          </div>
           <motion.h2
             style={{ y: yTitle }}
             className="absolute inset-0 flex items-center justify-center text-white text-4xl font-bold mix-blend-difference font-serif font-medium transition-colors duration-300 

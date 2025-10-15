@@ -1,5 +1,6 @@
 import Image from "next/image";
 import StripedBox from "./stripedPattern";
+import { useMediaQuery } from "react-responsive";
 
 export default function Sidebar() {
   const content = {
@@ -10,7 +11,11 @@ export default function Sidebar() {
   };
 
   return (
-    <div className="flex flex-col w-80 flex-shrink-0 flex-grow-0 p-9 border-r-[0.25px] border-r-[#ABA8A2]">
+    <div
+      className="flex flex-col md:p-6 border-r-[#ABA8A2]
+        w-full md:w-80 items-start md:p-9 md:border-r-[0.25px]
+         md:border-b-0"
+    >
       <div className="w-full h-auto aspect-3/4 relative mb-[20px]">
         <Image
           src={content.src}
@@ -19,7 +24,6 @@ export default function Sidebar() {
           className="object-contain"
         />
       </div>
-
       <div className="text-[20px] font-medium tracking-tight text-[#000000] mb-[10px]">
         {content.title}
       </div>

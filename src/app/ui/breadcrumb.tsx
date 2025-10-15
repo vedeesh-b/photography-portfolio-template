@@ -31,8 +31,10 @@ export default function Breadcrumbs({ current }: { current: string }) {
       <div className="flex flex-row gap-1.5">
         {categories.map((category) => (
           <motion.div
-            whileTap={{ scale: 0.95 }}
-            transition={{ type: "spring", stiffness: 500, damping: 20 }}
+            whileTap={{
+              scale: 0.95,
+              transition: { type: "spring", stiffness: 500, damping: 20 },
+            }}
             key={category.title}
           >
             <Link

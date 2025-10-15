@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import { Inter, Playfair_Display } from "next/font/google";
 import "./globals.css";
-import Navbar from "./ui/navbar";
-import Sidebar from "./ui/sidebar";
-import Footer from "./ui/footer";
+import ResponsiveLayout from "./ui/layouts/responsiveLayout";
+import DesktopLayout from "./ui/layouts/desktopLayout";
+import MobileLayout from "./ui/layouts/mobileLayout";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -29,13 +29,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${inter.variable} ${playfair.variable}`}>
-      <body className="antialiased bg-background text-foreground flex flex-col">
-        <Navbar />
-        <div className="flex flex-row">
-          <Sidebar />
-          {children}
-        </div>
-        <Footer />
+      <body className="antialiased bg-background text-foreground">
+        <ResponsiveLayout
+          desktop={<DesktopLayout>{children}</DesktopLayout>}
+          mobile={<MobileLayout>{children}</MobileLayout>}
+        />
       </body>
     </html>
   );

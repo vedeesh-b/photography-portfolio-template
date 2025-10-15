@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { motion } from "motion/react";
+import { useMediaQuery } from "react-responsive";
 
 export default function Navbar() {
   const menuItems = [
@@ -16,6 +17,8 @@ export default function Navbar() {
       href: "https://www.linkedin.com/in/vedeesh-bali/",
     },
   ];
+
+  const isDesktop = useMediaQuery({ query: "(min-width: 768px)" });
 
   return (
     <div className="flex flex-row justify-center items-center py-5 px-10 border-b-[0.25px] border-b-[#ABA8A2]">
@@ -52,11 +55,12 @@ export default function Navbar() {
         </Link>
       </div>
       <div className="w-1/3 flex justify-end text-[14px] gap-6 font-medium">
-        {menuItems.map((item) => (
-          <Link key={item.id} href={item.href}>
-            {item.title}
-          </Link>
-        ))}
+        {isDesktop &&
+          menuItems.map((item) => (
+            <Link key={item.id} href={item.href}>
+              {item.title}
+            </Link>
+          ))}
       </div>
     </div>
   );
