@@ -34,13 +34,13 @@ export default function CategoryPage({ params }: CategoryPageProps) {
       <p className="font-sans font-semibold leading-[70px] tracking-[-0.05em] text-[#000] text-[70px] mb-[10vh]">
         {categoryGallery.pageTitle}
       </p>
-      <div className="sm:flex sm:flex-col sm:gap-12 md:grid md:grid-cols-6 md:gap-8 md:auto-rows-fr">
+      <div className="sm:flex sm:flex-col sm:gap-12 md:grid md:grid-cols-6 md:gap-12 md:auto-rows-fr">
         {categoryGallery.imgs?.map((img) => (
           <div
             className={`w-full ${spanClassMap[img.span]} relative`}
             key={img.key}
           >
-            <div className="w-full h-[300px] relative">
+            <div className="w-full h-[440px] relative">
               <Image
                 src={img.src}
                 alt={img.title}
