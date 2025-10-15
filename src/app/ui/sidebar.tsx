@@ -13,7 +13,7 @@ export default function Sidebar() {
   return (
     <div
       className="flex flex-col md:p-6 border-r-[#ABA8A2]
-        w-full md:w-80 items-start md:p-9 md:border-r-[0.25px]
+        w-full md:w-88 items-start md:p-9 md:border-r-[0.25px]
          md:border-b-0"
     >
       <div className="w-full h-auto aspect-3/4 relative mb-[20px]">
@@ -24,14 +24,14 @@ export default function Sidebar() {
           className="object-contain"
         />
       </div>
-      <div className="text-[20px] font-medium tracking-tight text-[#000000] mb-[10px]">
+      <div className="text-[24px] font-medium tracking-tight text-[#000000] mb-[10px]">
         {content.title}
       </div>
-      <div className="text-[14px] *:mb-[14px]">
+      <div className="text-[15px] *:mb-[15px]">
         <p>{content.desc}</p>
         <p>{content.location}</p>
       </div>
-      <div className="absolute -bottom-60 left-0 grid grid-cols-6 w-80">
+      <div className="absolute -bottom-40 left-0 grid grid-cols-6 w-88">
         <div className="col-span-5">
           <StripedBox />
         </div>

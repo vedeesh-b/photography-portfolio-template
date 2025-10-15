@@ -20,14 +20,14 @@ function ParallaxItem({ src, title, href }: ParallaxItemType) {
   const yTitle = useParallax(scrollYProgress, 300);
   const isMobile = useMediaQuery({ query: "(max-width: 768px)" });
 
-  const containerHeight = isMobile ? "70vh" : "80vh";
+  const containerHeight = "70vh";
 
   return (
     <div
       ref={ref}
       className="w-full h-auto snap-center flex items-center justify-center"
     >
-      <Link href={href} className="group relative block w-full">
+      <Link href={href} className="group relative block w-[90%]">
         <motion.div
           style={{ y }}
           whileHover={{
@@ -49,7 +49,7 @@ function ParallaxItem({ src, title, href }: ParallaxItemType) {
           </div>
           <motion.h2
             style={{ y: yTitle }}
-            className="absolute inset-0 flex items-center justify-center text-white text-4xl font-bold mix-blend-difference font-serif font-medium transition-colors duration-300 
+            className="absolute inset-0 flex items-center justify-center text-white text-5xl font-bold mix-blend-difference font-serif font-medium transition-colors duration-300 
              group-hover:text-white group-hover:mix-blend-lighten"
           >
             {title}

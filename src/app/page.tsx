@@ -76,15 +76,15 @@ export default function Home() {
                     className="w-full object-contain"
                   />
                 </motion.div>
-                <div className="flex justify-between w-full text-sm mt-2">
+                <div className="flex justify-between w-full text-sm mt-3">
                   <span className="text-[#000000]">{img.category}</span>
                 </div>
               </Link>
             ))}
           </div>
-          <div className="font-serif font-medium leading-[40px] tracking-[-0.025em] text-[#403F3C] text-[30px] mb-[5vh] z-100">
+          <div className="font-serif font-medium leading-[50px] tracking-[-0.025em] text-[#403F3C] text-[36px] mb-[5vh] z-100">
             {quote}
-            <div className="absolute grid grid-cols-2 right-15 -bottom-36 -z-1 w-60">
+            <div className="absolute grid grid-cols-2 right-15 -bottom-28 -z-1 w-70">
               <div className="col-start-2">
                 <StripedBox />
               </div>
