@@ -4,6 +4,8 @@ import "./globals.css";
 import ResponsiveLayout from "./ui/layouts/responsiveLayout";
 import DesktopLayout from "./ui/layouts/desktopLayout";
 import MobileLayout from "./ui/layouts/mobileLayout";
+import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -34,6 +36,8 @@ export default function RootLayout({
           desktop={<DesktopLayout>{children}</DesktopLayout>}
           mobile={<MobileLayout>{children}</MobileLayout>}
         />
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );

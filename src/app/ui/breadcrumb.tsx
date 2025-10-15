@@ -20,7 +20,7 @@ export default function Breadcrumbs({ current }: { current: string }) {
   ];
 
   return (
-    <div className="text-[12px] mb-[2.5vh] text-[#403f3c] flex flex-row gap-3 font-medium">
+    <div className="text-[12px] mb-3 md:mb-[2.5vh] text-[#403f3c] flex flex-row gap-3 font-medium">
       <motion.div
         whileTap={{ scale: 0.95 }}
         transition={{ type: "spring", stiffness: 500, damping: 20 }}
