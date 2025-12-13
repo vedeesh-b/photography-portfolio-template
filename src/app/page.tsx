@@ -1,7 +1,6 @@
 "use client";
 
 import Image from "next/image";
-import Parallax from "./ui/parallax";
 import StripedBox from "./ui/stripedPattern";
 import Link from "next/link";
 import { motion } from "motion/react";
@@ -96,7 +95,6 @@ export default function Home() {
           </div>
         </div>
       )}
-      {/* <Parallax /> */}
       <ScrollRevealStack />
     </div>
   );
