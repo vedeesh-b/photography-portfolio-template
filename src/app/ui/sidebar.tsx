@@ -3,6 +3,7 @@
 import Image from "next/image";
 import StripedBox from "./stripedPattern";
 import { useMediaQuery } from "react-responsive";
+import { AnimatedText } from "./animatedText";
 
 export default function Sidebar() {
   const content = {
@@ -28,8 +29,8 @@ export default function Sidebar() {
           className="object-contain"
         />
       </div>
-      <div className="text-[24px] font-medium tracking-tight text-[#000000] mb-[10px]">
-        {content.title}
+      <div className="text-[24px] font-medium tracking-tight text-[#000000] mb-[10px] overflow-hidden relative inline-block">
+        <AnimatedText text={content.title} />
       </div>
       <div className="text-[15px] *:mb-[15px]">
         <p>{content.desc}</p>

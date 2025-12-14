@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { Category, galleries } from "../lib/galleryData";
 import Image from "next/image";
 import Breadcrumbs from "../ui/breadcrumb";
+import { AnimatedText } from "../ui/animatedText";
 
 export async function generateStaticParams() {
   return Object.keys(galleries).map((category) => ({ category }));
@@ -13,8 +14,8 @@ type CategoryPageProps = {
   };
 };
 
-export default function CategoryPage({ params }: CategoryPageProps) {
-  const { category } = params;
+export default async function CategoryPage({ params }: CategoryPageProps) {
+  const { category } = await params;
 
   if (!(category in galleries)) {
     notFound();
@@ -31,9 +32,9 @@ export default function CategoryPage({ params }: CategoryPageProps) {
   return (
     <div className="p-1 md:p-9 w-full">
       <Breadcrumbs current={category} />
-      <p className="font-sans font-semibold leading-[70px] tracking-[-0.05em] text-[#000] text-[70px] mb-[10vh]">
-        {categoryGallery.pageTitle}
-      </p>
+      <div className="font-sans font-semibold leading-[80px] tracking-[-0.05em] text-[#000] text-[70px] mb-[10vh] overflow-hidden relative inline-block">
+        <AnimatedText text={categoryGallery.pageTitle} />
+      </div>
       <div className="flex flex-col gap-16 md:grid md:grid-cols-6 md:gap-12 md:auto-rows-fr">
         {categoryGallery.imgs?.map((img) => (
           <div
