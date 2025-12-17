@@ -14,6 +14,10 @@ type CategoryPageProps = {
   };
 };
 
+function adjustKey(num: number): string {
+  return `00${num}`.slice(-3);
+}
+
 export default async function CategoryPage({ params }: CategoryPageProps) {
   const { category } = await params;
 
@@ -36,24 +40,24 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
         <AnimatedText text={categoryGallery.pageTitle} />
       </div>
       <div className="flex flex-col gap-16 md:grid md:grid-cols-6 md:gap-12 md:auto-rows-fr">
-        {categoryGallery.imgs?.map((img) => (
+        {categoryGallery.imgs?.map((img, i) => (
           <div
             className={`w-full ${spanClassMap[img.span]} relative`}
-            key={img.key}
+            key={i + 1}
           >
             <div className="w-full h-[440px] relative">
               <Image
                 src={img.src}
                 alt={img.title}
                 fill
-                className="object-cover"
+                className="object-cover hover:brightness-75 transition-delay duration-300"
                 quality={100}
                 sizes="(max-width: 768px) 100vw, 33vw"
               />
             </div>
             <div className="flex justify-between text-sm mt-3">
               <span className="text-[#000000]">{img.title}</span>
-              <span className="text-[#807D79]">{img.key}</span>
+              <span className="text-[#807D79]">{adjustKey(i + 1)}</span>
             </div>
           </div>
         ))}

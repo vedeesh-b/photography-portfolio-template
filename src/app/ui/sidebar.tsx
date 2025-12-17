@@ -17,7 +17,7 @@ export default function Sidebar() {
 
   return (
     <div
-      className="flex flex-col md:p-6 border-r-[#ABA8A2]
+      className="flex flex-col pb-16 md:p-6 border-r-[#ABA8A2]
         w-full md:w-88 items-start md:p-9 md:border-r-[0.25px]
          md:border-b-0"
     >

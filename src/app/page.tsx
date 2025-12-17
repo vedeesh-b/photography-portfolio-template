@@ -7,6 +7,7 @@ import { motion } from "motion/react";
 import { useMediaQuery } from "react-responsive";
 import Sidebar from "./ui/sidebar";
 import ScrollRevealStack from "./ui/scrollStackReveal";
+import { CardGrid } from "./ui/cardGrid";
 
 export default function Home() {
   const quote =
@@ -82,7 +83,7 @@ export default function Home() {
               </Link>
             ))}
           </div>
-          <div className="font-serif font-medium leading-[50px] tracking-[-0.025em] text-[#403F3C] text-[36px] mb-[5vh] z-100">
+          <div className="font-serif font-medium leading-[50px] tracking-[-0.025em] text-[#403F3C] text-[36px] mb-[30vh] z-100">
             {quote}
             <div className="absolute grid grid-cols-2 right-15 -bottom-28 -z-1 w-70">
               <div className="col-start-2">
@@ -95,7 +96,7 @@ export default function Home() {
           </div>
         </div>
       )}
-      <ScrollRevealStack />
+      <CardGrid />
     </div>
   );
 }
