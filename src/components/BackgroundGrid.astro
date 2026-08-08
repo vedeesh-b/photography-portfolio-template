@@ -1,0 +1,220 @@
+---
+import { getCollection } from "astro:content";
+import { Image } from "astro:assets";
+
+// Visible layout is 5x4; one extra buffer column/row on each side (7x6
+// total) is what gets wrapped back into view as the canvas pans, so the
+// edge of the grid is never exposed.
+const VISIBLE_COLUMNS = 5;
+const VISIBLE_ROWS = 4;
+const COLUMNS = VISIBLE_COLUMNS + 2;
+const ROWS = VISIBLE_ROWS + 2;
+const CELL_COUNT = COLUMNS * ROWS;
+
+const gallery = await getCollection("gallery");
+const blocks = Array.from(
+  { length: CELL_COUNT },
+  (_, i) => gallery[i % gallery.length],
+);
+---
+
+<div class="canvas-viewport">
+  <div
+    class="canvas-grid"
+    id="background-grid"
+    data-columns={COLUMNS}
+    data-rows={ROWS}
+  >
+    {
+      blocks.map((image) => (
+        <div class="block">
+          <Image
+            src={image.data.url}
+            alt={image.data.alt}
+            loading="eager"
+            decoding="async"
+            width={360}
+            height={480}
+          />
+        </div>
+      ))
+    }
+  </div>
+  <div class="center-overlay" aria-hidden="true"></div>
+</div>
+
+<style>
+  .canvas-viewport {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    z-index: -1;
+    overlay:;
+  }
+
+  .center-overlay {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(
+      ellipse at center,
+      rgba(0, 0, 0, 0.65) 0%,
+      rgba(0, 0, 0, 0.35) 35%,
+      rgba(0, 0, 0, 0) 70%
+    );
+    pointer-events: none;
+  }
+
+  .canvas-grid {
+    position: absolute;
+    /* 7 columns / 5 visible = 140% width, offset -20% to center the
+       overhang; 6 rows / 4 visible = 150% height, offset -25%. */
+    width: 140%;
+    height: 150%;
+    left: -20%;
+    top: -25%;
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    grid-template-rows: repeat(6, 1fr);
+    gap: 6rem;
+    will-change: transform;
+  }
+
+  .block {
+    background-color: #1a1a1a;
+    border-radius: 4px;
+    height: 240px;
+    width: 180px;
+    overflow: hidden;
+  }
+
+  .block img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    opacity: 0;
+    filter: blur(12px);
+  }
+</style>
+
+<script>
+  import { animate as motionAnimate } from "motion";
+
+  // Grid position is a direct (eased) function of cursor position - no
+  // time-accumulating velocity, no wrap-around. Each image stays fixed
+  // to its cell forever. The travel range is capped at exactly one
+  // column/row pitch, so pushing the cursor to an edge smoothly reveals
+  // the buffered column/row without ever snapping or reusing a cell.
+  const EASE = 0.06;
+
+  // On top of the cursor parallax, the grid idles with a slow, bounded
+  // drift toward the top-right. It's a cosine "breath" (0 -> peak -> 0)
+  // rather than an unbounded pan, so it never outruns the buffered
+  // column/row and never needs a jarring reset/jump.
+  const IDLE_PERIOD_MS = 14000;
+  const IDLE_AMPLITUDE_X = 36;
+  const IDLE_AMPLITUDE_Y = 36;
+
+  // Network completion order is effectively random, so revealing images as
+  // they individually finish loading looks like a scatter. Instead each
+  // image gets a fixed reveal delay from its row-major DOM position (the
+  // grid is laid out left-to-right, top-to-bottom, so this plays as a wave
+  // moving row by row down the grid) and only actually animates in once
+  // its own bytes have arrived - whichever comes later.
+  const REVEAL_STAGGER_STEP = 0.025;
+  const REVEAL_DURATION = 0.6;
+
+  // Astro's client router only evaluates this module once per session, so
+  // setup lives inside an astro:page-load handler, which fires after the
+  // initial load AND after every later navigation - the only reliable
+  // place to (re)bind against the freshly-swapped-in grid. Any previous
+  // instance's RAF loop and window listeners are torn down first so
+  // repeat visits to the homepage don't stack duplicates.
+  let cleanup: (() => void) | null = null;
+
+  function initBackgroundGrid() {
+    cleanup?.();
+
+    const gridEl = document.getElementById(
+      "background-grid",
+    ) as HTMLElement | null;
+    if (!gridEl) return;
+    const grid = gridEl;
+
+    const columns = Number(grid.dataset.columns ?? 7);
+    const rows = Number(grid.dataset.rows ?? 6);
+
+    let mouseX = 0;
+    let mouseY = 0;
+    let currentX = 0;
+    let currentY = 0;
+    let rafId = 0;
+    let destroyed = false;
+
+    function onMouseMove(event: MouseEvent) {
+      mouseX = (event.clientX / window.innerWidth) * 2 - 1;
+      mouseY = (event.clientY / window.innerHeight) * 2 - 1;
+    }
+
+    function revealImage(img: HTMLImageElement, delay: number) {
+      const start = () =>
+        motionAnimate(
+          img,
+          { opacity: 1, filter: "blur(0px)" },
+          { duration: REVEAL_DURATION, delay, ease: "easeOut" },
+        );
+
+      if (img.complete) {
+        start();
+      } else {
+        img.addEventListener("load", start, { once: true });
+        img.addEventListener("error", start, { once: true });
+      }
+    }
+
+    function onRevealImages() {
+      const images = Array.from(
+        grid?.querySelectorAll("img") ?? [],
+      ) as HTMLImageElement[];
+
+      images.forEach((img, index) =>
+        revealImage(img, index * REVEAL_STAGGER_STEP),
+      );
+    }
+
+    function animate(now: number) {
+      if (destroyed) return;
+
+      const columnPitch = grid.clientWidth / columns;
+      const rowPitch = grid.clientHeight / rows;
+
+      const idleProgress =
+        (1 - Math.cos((now / IDLE_PERIOD_MS) * Math.PI * 2)) / 2;
+      const idleX = idleProgress * IDLE_AMPLITUDE_X;
+      const idleY = -idleProgress * IDLE_AMPLITUDE_Y;
+
+      const targetX = mouseX * columnPitch + idleX;
+      const targetY = mouseY * rowPitch + idleY;
+
+      currentX += (targetX - currentX) * EASE;
+      currentY += (targetY - currentY) * EASE;
+
+      grid.style.transform = `translate3d(${currentX}px, ${currentY}px, 0)`;
+
+      rafId = requestAnimationFrame(animate);
+    }
+
+    window.addEventListener("mousemove", onMouseMove);
+    window.addEventListener("landing:reveal-images", onRevealImages);
+    rafId = requestAnimationFrame(animate);
+
+    cleanup = () => {
+      destroyed = true;
+      cancelAnimationFrame(rafId);
+      window.removeEventListener("mousemove", onMouseMove);
+      window.removeEventListener("landing:reveal-images", onRevealImages);
+    };
+  }
+
+  document.addEventListener("astro:page-load", initBackgroundGrid);
+</script>

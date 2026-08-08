@@ -1,0 +1,19 @@
+html {
+  font-family: sans-serif;
+}
+
+body {
+  background-color: #111;
+  color: #fff;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+h1 {
+  font-size: 64px;
+  text-transform: uppercase;
+  font-weight: 600;
+  letter-spacing: -1.5%;
+}

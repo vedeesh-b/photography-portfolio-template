@@ -1,0 +1,282 @@
+---
+import { Image } from "astro:assets";
+import fujiIcon from "../../public/fuji.svg";
+
+const sectionLinks = [
+  {
+    href: "/sections/nature",
+    label: "Nature",
+  },
+  {
+    href: "/sections/sport",
+    label: "Sport",
+  },
+  {
+    href: "/sections/travel",
+    label: "Travel",
+  },
+];
+---
+
+<nav>
+  <a href="/">
+    <Image src={fujiIcon} alt="Fuji Icon" height={"40"} />
+  </a>
+  <div class="sections">
+    {
+      sectionLinks.map((section) => (
+        <a href={section.href} class="nav-link">
+          <span class="link-mask">
+            <span class="link-text">{section.label}</span>
+            <span class="link-text link-text--clone" aria-hidden="true">
+              {section.label}
+            </span>
+          </span>
+        </a>
+      ))
+    }
+  </div>
+  <a href="https://vedeeshbali.com/" class="about-link">About</a>
+  <button
+    type="button"
+    class="hamburger"
+    id="hamburger-toggle"
+    aria-label="Open menu"
+    aria-expanded="false"
+    aria-controls="mobile-menu"
+  >
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
+</nav>
+
+<div class="mobile-menu" id="mobile-menu">
+  <ul>
+    {
+      sectionLinks.map((section) => (
+        <li>
+          <a href={section.href} class="mobile-nav-link">
+            {section.label}
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+  <a href="https://vedeeshbali.com/" class="mobile-about-link">About</a>
+</div>
+
+<style>
+  nav {
+    padding: 1.75rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    backdrop-filter: blur(8px);
+    background-color: hsla(0, 0, 7, 0.9);
+    mask-image: linear-gradient(to bottom, #111 40%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to bottom, #111 40%, transparent 100%);
+  }
+
+  nav a {
+    color: #ccc;
+    text-transform: uppercase;
+    text-decoration: none;
+  }
+
+  .sections {
+    display: flex;
+    gap: 2rem;
+  }
+
+  .nav-link {
+    display: inline-block;
+  }
+
+  .link-mask {
+    position: relative;
+    display: block;
+    overflow: hidden;
+    height: 1em;
+    line-height: 1;
+  }
+
+  .link-text {
+    display: block;
+  }
+
+  .link-text--clone {
+    position: absolute;
+    top: 100%;
+    left: 0;
+  }
+
+  .hamburger {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    background: none;
+    border: none;
+    cursor: pointer;
+    z-index: 20;
+  }
+
+  .hamburger span {
+    display: block;
+    width: 22px;
+    height: 2px;
+    background-color: #ccc;
+    transition:
+      transform 0.3s ease,
+      opacity 0.3s ease;
+  }
+
+  .hamburger[aria-expanded="true"] span:nth-child(1) {
+    transform: translateY(7px) rotate(45deg);
+  }
+
+  .hamburger[aria-expanded="true"] span:nth-child(2) {
+    opacity: 0;
+  }
+
+  .hamburger[aria-expanded="true"] span:nth-child(3) {
+    transform: translateY(-7px) rotate(-45deg);
+  }
+
+  .mobile-menu {
+    position: fixed;
+    inset: 0;
+    z-index: 15;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 2rem;
+    background-color: hsla(0, 0, 7, 0.97);
+    backdrop-filter: blur(8px);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-16px);
+    transition:
+      opacity 0.3s ease,
+      transform 0.3s ease,
+      visibility 0s linear 0.3s;
+  }
+
+  .mobile-menu.open {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+    transition:
+      opacity 0.3s ease,
+      transform 0.3s ease,
+      visibility 0s linear 0s;
+  }
+
+  .mobile-menu ul {
+    list-style: none;
+    margin: 0;
+    padding: 0 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .mobile-nav-link,
+  .mobile-about-link {
+    color: #ccc;
+    text-transform: uppercase;
+    text-decoration: none;
+  }
+
+  .mobile-nav-link {
+    font-size: 32px;
+    letter-spacing: -1.5%;
+  }
+
+  .mobile-about-link {
+    position: absolute;
+    bottom: 2rem;
+    left: 2rem;
+  }
+
+  @media (max-width: 768px) {
+    nav {
+      padding: 1.5rem;
+    }
+
+    .sections,
+    .about-link {
+      display: none;
+    }
+
+    .hamburger {
+      display: flex;
+    }
+  }
+</style>
+
+<script>
+  import { animate } from "motion";
+
+  // Both text layers move together: the original slides up out of the
+  // mask as the clone slides up into it from below, so the swap always
+  // reads as one continuous line of text moving rather than two
+  // independent fades.
+  const DURATION = 0.4;
+  const EASE = "easeInOut";
+
+  // Astro's client router only evaluates this module once per session, so
+  // the hover listeners have to be rebound from an astro:page-load
+  // handler - it fires after the initial load AND after every later
+  // navigation, which is the only time freshly-swapped-in nav links
+  // actually exist to bind against. Listeners on the previous page's
+  // (now-removed) elements are simply discarded with them.
+  function initNav() {
+    document.querySelectorAll<HTMLElement>(".link-mask").forEach((mask) => {
+      const layers = Array.from(
+        mask.querySelectorAll<HTMLElement>(".link-text"),
+      );
+      const link = mask.closest<HTMLElement>(".nav-link");
+
+      link?.addEventListener("mouseenter", () => {
+        animate(layers, { y: "-100%" }, { duration: DURATION, ease: EASE });
+      });
+
+      link?.addEventListener("mouseleave", () => {
+        animate(layers, { y: "0%" }, { duration: DURATION, ease: EASE });
+      });
+    });
+  }
+
+  // Mirrors the astro:page-load pattern used above - the toggle button and
+  // menu panel are freshly swapped in on every navigation, so listeners
+  // need rebinding each time rather than once per session.
+  function initMobileMenu() {
+    const toggle = document.getElementById("hamburger-toggle");
+    const menu = document.getElementById("mobile-menu");
+    if (!toggle || !menu) return;
+
+    const closeMenu = () => {
+      menu.classList.remove("open");
+      toggle.setAttribute("aria-expanded", "false");
+    };
+
+    toggle.addEventListener("click", () => {
+      const isOpen = menu.classList.toggle("open");
+      toggle.setAttribute("aria-expanded", String(isOpen));
+    });
+
+    menu.querySelectorAll("a").forEach((link) => {
+      link.addEventListener("click", closeMenu);
+    });
+  }
+
+  document.addEventListener("astro:page-load", () => {
+    initNav();
+    initMobileMenu();
+  });
+</script>

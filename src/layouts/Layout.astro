@@ -1,0 +1,76 @@
+---
+import { Font, getImage } from "astro:assets";
+import { ClientRouter } from "astro:transitions";
+import PageTransition from "../components/PageTransition.astro";
+import defaultOgImage from "../assets/gallery/travel/dingli_cliff_16_9.webp";
+import "../styles/global.css";
+
+interface Props {
+  title?: string;
+  description?: string;
+  ogImage?: ImageMetadata;
+}
+
+const {
+  title = "Vedeesh's Photography",
+  description = "Photography portfolio of Vedeesh Bali, covering nature, sport, and travel images shot across the UK, Europe, and Asia.",
+  ogImage = defaultOgImage,
+} = Astro.props;
+
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+const optimizedOgImage = await getImage({
+  src: ogImage,
+  width: 1200,
+  height: 630,
+  format: "jpg",
+});
+const ogImageURL = new URL(optimizedOgImage.src, Astro.site);
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="icon" type="image/svg+xml" href="/fuji.svg" />
+    <link rel="icon" href="/fuji.ico" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalURL} />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:image" content={ogImageURL} />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImageURL} />
+
+    <Font cssVariable="--font-sans-serif" />
+    <ClientRouter />
+  </head>
+  <body>
+    <PageTransition />
+    <slot />
+  </body>
+</html>
+
+<style>
+  html,
+  body {
+    margin: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  body {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  }
+</style>
