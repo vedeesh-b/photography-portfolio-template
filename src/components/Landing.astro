@@ -1,0 +1,95 @@
+---
+
+---
+
+<div class="main">
+  <h1 id="name">Vedeesh Bali</h1>
+  <span id="subtitle"
+    >ENGINEER AND PHOTOGRAPHER WORKING<br />ACROSS NATURE, SPORT, AND
+    LANDSCAPES.</span
+  >
+</div>
+<style>
+  .main {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  #name {
+    font-size: 64px;
+    text-transform: uppercase;
+    font-weight: 600;
+    letter-spacing: -1.5%;
+  }
+
+  #subtitle {
+    font-size: 15px;
+    line-height: 25px;
+    text-align: center;
+    color: #ededed;
+    font-weight: 300;
+  }
+
+  #name,
+  #subtitle {
+    opacity: 0;
+    filter: blur(20px);
+  }
+
+  @media (max-width: 768px) {
+    .main {
+      gap: 0.75rem;
+      padding: 0 1.5rem;
+    }
+
+    #name {
+      font-size: 36px;
+    }
+
+    #subtitle {
+      font-size: 12px;
+      line-height: 20px;
+    }
+  }
+</style>
+
+<script>
+  import { animate, stagger } from "motion";
+
+  // Landing images should stay hidden until the name/subtitle have been
+  // visible for a beat - BackgroundGrid listens for this event rather than
+  // using a fixed timer, so it stays in sync even if this animation's
+  // timing changes.
+  const REVEAL_IMAGES_DELAY = 1000;
+
+  // Astro's client router only evaluates this module once per session, so
+  // the reveal has to be re-triggered from an astro:page-load handler -
+  // it fires after the initial load AND after every later navigation
+  // (e.g. navigating back to the homepage), which is when a fresh,
+  // still-hidden name/subtitle pair actually exists in the DOM.
+  function initLanding() {
+    const name = document.getElementById("name");
+    const subtitle = document.getElementById("subtitle");
+    if (!name || !subtitle) return;
+
+    const blurIn = animate(
+      [name, subtitle],
+      { opacity: 1, filter: "blur(0px)" },
+      { duration: 1, delay: stagger(0.2), ease: "easeOut" },
+    );
+
+    blurIn.finished.then(() => {
+      setTimeout(() => {
+        window.dispatchEvent(new CustomEvent("landing:reveal-images"));
+      }, REVEAL_IMAGES_DELAY);
+    });
+  }
+
+  document.addEventListener("astro:page-load", initLanding);
+</script>

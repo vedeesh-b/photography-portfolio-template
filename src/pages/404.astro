@@ -1,0 +1,61 @@
+---
+import { Image } from "astro:assets";
+import Navigation from "../components/Navigation.astro";
+import Layout from "../layouts/Layout.astro";
+import fujiIcon from "../../public/fuji.svg";
+---
+
+<Layout
+  title="Page Not Found | Vedeesh Bali"
+  description="The page you're looking for doesn't exist."
+>
+  <Navigation />
+  <div class="not-found">
+    <Image src={fujiIcon} alt="Fuji Icon" width={128} />
+    <h1>404</h1>
+    <p>This page doesn't exist.</p>
+    <a href="/">Back to home</a>
+  </div>
+</Layout>
+
+<style>
+  .not-found {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    flex: 1;
+    min-height: 0;
+    text-align: center;
+    padding: 0 1.5rem;
+  }
+
+  h1 {
+    margin: 0;
+    font-size: 64px;
+  }
+
+  p {
+    margin: 0;
+    color: #808080;
+  }
+
+  a {
+    color: #ccc;
+    text-transform: uppercase;
+    text-decoration: none;
+    border-bottom: 1px solid currentColor;
+    padding-bottom: 2px;
+  }
+
+  a:hover {
+    color: #fff;
+  }
+
+  @media (max-width: 768px) {
+    h1 {
+      font-size: 40px;
+    }
+  }
+</style>

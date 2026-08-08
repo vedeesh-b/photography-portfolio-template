@@ -1,0 +1,79 @@
+---
+const BAR_COUNT = 6;
+---
+
+<div
+  id="page-transition-overlay"
+  transition:persist
+  transition:name="page-transition-overlay"
+  aria-hidden="true"
+>
+  {Array.from({ length: BAR_COUNT }).map(() => <div class="bar" />)}
+</div>
+
+<style>
+  #page-transition-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 999;
+    display: flex;
+    pointer-events: none;
+  }
+
+  #page-transition-overlay .bar {
+    flex: 1;
+    background-color: #1a1a1a;
+    transform: scaleY(0);
+    transform-origin: bottom;
+  }
+</style>
+
+<script>
+  import { animate, stagger } from "motion";
+
+  const bars = Array.from(
+    document.querySelectorAll<HTMLElement>("#page-transition-overlay .bar"),
+  );
+
+  const DURATION = 0.45;
+  const STAGGER_STEP = 0.06;
+  const EASE = "easeInOut";
+
+  // Bars grow up from the bottom to fully cover the viewport, then - once
+  // the new page has swapped in underneath - shrink away toward the top.
+  // Keeping both phases moving in the same direction reads as one
+  // continuous upward wipe rather than two separate animations.
+  function wipeIn() {
+    bars.forEach((bar) => {
+      bar.style.transformOrigin = "bottom";
+    });
+    return animate(
+      bars,
+      { scaleY: [0, 1] },
+      { duration: DURATION, delay: stagger(STAGGER_STEP), ease: EASE },
+    ).finished;
+  }
+
+  function wipeOut() {
+    bars.forEach((bar) => {
+      bar.style.transformOrigin = "top";
+    });
+    return animate(
+      bars,
+      { scaleY: [1, 0] },
+      { duration: DURATION, delay: stagger(STAGGER_STEP), ease: EASE },
+    ).finished;
+  }
+
+  document.addEventListener("astro:before-preparation", (event) => {
+    const originalLoader = event.loader;
+    event.loader = async () => {
+      await wipeIn();
+      await originalLoader();
+    };
+  });
+
+  document.addEventListener("astro:after-swap", () => {
+    wipeOut();
+  });
+</script>

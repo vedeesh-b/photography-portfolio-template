@@ -1,36 +1,24 @@
 {
-  "name": "photography-portfolio-template",
-  "version": "0.1.0",
-  "private": true,
+  "name": "",
+  "type": "module",
+  "version": "0.0.1",
+  "engines": {
+    "node": ">=22.12.0"
+  },
   "scripts": {
-    "dev": "next dev --turbopack",
-    "build": "next build --turbopack",
-    "start": "next start",
-    "lint": "eslint"
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
   },
   "dependencies": {
-    "@headlessui/react": "^2.2.8",
-    "@heroui/button": "^2.2.26",
-    "@heroui/system": "^2.4.22",
-    "@vercel/analytics": "^1.5.0",
-    "@vercel/speed-insights": "^1.2.0",
-    "framer-motion": "12.23.19",
-    "motion": "^12.23.22",
-    "next": "15.5.4",
-    "react": "19.1.0",
-    "react-dom": "19.1.0",
-    "react-responsive": "^10.0.1",
-    "vercel": "^48.3.0"
+    "@astrojs/sitemap": "^3.7.3",
+    "astro": "^7.1.6",
+    "motion": "^13.0.0",
+    "sharp": "^0.35.3"
   },
   "devDependencies": {
-    "@eslint/eslintrc": "^3",
-    "@tailwindcss/postcss": "^4",
-    "@types/node": "^20",
-    "@types/react": "^19",
-    "@types/react-dom": "^19",
-    "eslint": "^9",
-    "eslint-config-next": "15.5.4",
-    "tailwindcss": "^4",
-    "typescript": "^5"
+    "prettier": "3.9.6",
+    "prettier-plugin-astro": "0.14.1"
   }
 }

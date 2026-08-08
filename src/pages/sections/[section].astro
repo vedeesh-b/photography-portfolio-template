@@ -1,0 +1,424 @@
+---
+import Navigation from "../../components/Navigation.astro";
+import Layout from "../../layouts/Layout.astro";
+import { getCollection } from "astro:content";
+import { Image } from "astro:assets";
+
+const { section } = Astro.params;
+const { images } = Astro.props;
+
+const sectionTitle = `${section.charAt(0).toUpperCase()}${section.slice(1)}`;
+const pageTitle = `${sectionTitle} Photography | Vedeesh Bali`;
+const pageDescription = `${sectionTitle} photography by Vedeesh Bali${
+  images[0]?.data.location ? `, shot in locations including ${images[0].data.location}` : ""
+}.`;
+
+export async function getStaticPaths() {
+  const gallery = await getCollection("gallery");
+  const sections = [...new Set(gallery.map((entry) => entry.data.section))];
+
+  return sections.map((section) => ({
+    params: { section },
+    props: {
+      images: gallery.filter((entry) => entry.data.section === section),
+    },
+  }));
+}
+---
+
+<Layout
+  title={pageTitle}
+  description={pageDescription}
+  ogImage={images[0]?.data.url}
+>
+  <Navigation />
+  <div class="section-layout">
+    <div class="menu-content">
+      <h1>{section}</h1>
+      <ul class="titles-list">
+        {
+          images.map(({ data }, index) => (
+            <li>
+              <button type="button" class="title-btn" data-index={index}>
+                <div>{data.title}</div>
+                <div class="location">{data.location}</div>
+              </button>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+    <div class="image-grid">
+      {
+        images.map(({ data }, index) => (
+          <div class="image-item" data-index={index} tabindex="0">
+            <Image
+              src={data.url}
+              alt={data.alt}
+              loading="lazy"
+              decoding="async"
+              layout="constrained"
+              width={1200}
+              sizes="(max-width: 768px) 90vw, 45vw"
+            />
+            <span class="location">{data.title}</span>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</Layout>
+
+<style>
+  h1 {
+    padding: 0 2rem;
+  }
+
+  .section-layout {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    align-items: start;
+    padding: 0 2rem 2rem;
+    overflow: hidden;
+  }
+
+  .menu-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: start;
+    align-items: center;
+    padding: 2rem 6rem;
+    > * {
+      width: 100%;
+    }
+  }
+
+  .titles-list {
+    list-style: none;
+    margin: 0;
+    padding: 0 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    max-height: 60vh;
+    overflow-y: auto;
+    mask-image: linear-gradient(to bottom, #000 85%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to bottom, #000 85%, transparent 100%);
+  }
+
+  .title-btn {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    background: none;
+    border: none;
+    color: #ccc;
+    font: inherit;
+    letter-spacing: -1.5%;
+    padding: 0.75rem;
+    cursor: pointer;
+    border-radius: 8px;
+  }
+
+  .title-btn:hover {
+    color: #fff;
+  }
+
+  .title-btn.active {
+    color: #fff;
+    background-color: hsla(0, 0, 100, 0.05);
+  }
+
+  .location {
+    color: #808080;
+  }
+
+  .image-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 4rem;
+    max-height: 100vh;
+    overflow-y: auto;
+    align-content: start;
+    padding-bottom: 8rem;
+  }
+
+  .image-item {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    outline: none;
+    color: #808080;
+    text-decoration: none;
+  }
+
+  .image-item:hover > .location {
+    color: #ccc;
+  }
+
+  .image-item img {
+    display: block;
+    width: 100%;
+    height: auto;
+    background-color: #1a1a1a;
+    opacity: 0;
+    transition: opacity 0.4s ease-out;
+    transform-origin: center;
+    will-change: transform;
+  }
+
+  .image-item img.is-loaded {
+    opacity: 1;
+  }
+
+  .image-item .location {
+    display: block;
+    font-size: 14px;
+    padding-top: 0.75rem;
+  }
+
+  .image-item:active,
+  .image-item:focus > .location {
+    color: #ccc;
+  }
+
+  @media (max-width: 768px) {
+    h1 {
+      padding: 0 1.5rem;
+      font-size: 40px;
+    }
+
+    .section-layout {
+      display: flex;
+      flex-direction: column;
+      padding: 0 1.5rem 1.5rem;
+      overflow: visible;
+    }
+
+    .menu-content {
+      padding: 0;
+    }
+
+    .titles-list {
+      display: none;
+    }
+
+    .image-grid {
+      max-height: none;
+      overflow-y: visible;
+      gap: 2rem;
+      padding-bottom: 2rem;
+    }
+  }
+</style>
+
+<script>
+  // Astro's client router only evaluates each page's module script once
+  // per session - it does NOT re-run on every client-side navigation, even
+  // though the DOM gets swapped out for a new instance of this same
+  // dynamic route. All setup therefore lives inside an astro:page-load
+  // handler, which fires after the initial load AND after every
+  // subsequent navigation, so it always wires up the freshly-swapped-in
+  // DOM. Listeners bound to the swapped container/elements are naturally
+  // discarded with them; window/document-level listeners are torn down
+  // and rebound explicitly so repeated visits don't accumulate duplicates.
+  let cleanup: (() => void) | null = null;
+
+  function initSectionPage() {
+    cleanup?.();
+
+    const columns = 2;
+    const titleButtons = document.querySelectorAll(".title-btn");
+    const imageItems = document.querySelectorAll(".image-item");
+
+    if (imageItems.length === 0) return;
+
+    document.querySelectorAll(".image-item img").forEach((img) => {
+      const image = img as HTMLImageElement;
+      if (image.complete) {
+        image.classList.add("is-loaded");
+      } else {
+        image.addEventListener("load", () => image.classList.add("is-loaded"), {
+          once: true,
+        });
+      }
+    });
+
+    // As the scroll container moves, each image scales up toward
+    // PEAK_SCALE as its center approaches the container's vertical
+    // center, and eases back to 1 as it moves away in either direction -
+    // driven directly off scroll position (not an IntersectionObserver)
+    // so the effect stays perfectly in sync with the scroll, not fired in
+    // discrete steps.
+    const scrollContainer = document.querySelector(
+      ".image-grid",
+    ) as HTMLElement;
+    const scaleTargets = Array.from(
+      document.querySelectorAll(".image-item img"),
+    ) as HTMLImageElement[];
+    const scrollItems = Array.from(imageItems) as HTMLElement[];
+
+    const PEAK_SCALE = 1.08;
+    const FALLOFF_RANGE = 0.6; // fraction of container height over which the effect fades out
+
+    let ticking = false;
+
+    function updateScales() {
+      ticking = false;
+      if (!scrollContainer) return;
+
+      const containerRect = scrollContainer.getBoundingClientRect();
+      const containerCenter = containerRect.top + containerRect.height / 2;
+      const falloffDistance = containerRect.height * FALLOFF_RANGE;
+
+      scaleTargets.forEach((img) => {
+        const imgRect = img.getBoundingClientRect();
+        const imgCenter = imgRect.top + imgRect.height / 2;
+        const distance = Math.abs(imgCenter - containerCenter);
+        const proximity = Math.max(0, 1 - distance / falloffDistance);
+        const scale = 1 + (PEAK_SCALE - 1) * proximity;
+
+        img.style.transform = `scale(${scale})`;
+
+        // transform: scale() doesn't affect layout, so the enlarged image
+        // visually overflows its box by half the extra height on each
+        // side, eating into the gap above the location text. Push the
+        // location down by that overflow amount so its visible
+        // padding-top stays a constant 0.75rem regardless of scale.
+        const location = img.nextElementSibling as HTMLElement | null;
+        if (location) {
+          const overflow = (img.offsetHeight * (scale - 1)) / 2;
+          location.style.transform = `translateY(${overflow}px)`;
+        }
+      });
+
+      updateActiveFromScroll(containerRect);
+    }
+
+    // The active title tracks whichever image is topmost in the visible
+    // list, not just the one the user last clicked/focused - so scrolling
+    // manually keeps the list in sync the same way clicking does.
+    function updateActiveFromScroll(containerRect: DOMRect) {
+      let topmostIndex = 0;
+
+      for (const item of scrollItems) {
+        const itemRect = item.getBoundingClientRect();
+        if (itemRect.bottom > containerRect.top + 1) {
+          topmostIndex = Number(item.dataset.index);
+          break;
+        }
+        topmostIndex = Number(item.dataset.index);
+      }
+
+      setActive(topmostIndex);
+    }
+
+    function onScroll() {
+      if (!ticking) {
+        ticking = true;
+        requestAnimationFrame(updateScales);
+      }
+    }
+
+    function setActive(index: number) {
+      titleButtons.forEach((btn) => {
+        btn.classList.toggle("active", Number(btn.dataset.index) === index);
+      });
+      imageItems.forEach((item) => {
+        item.classList.toggle("active", Number(item.dataset.index) === index);
+      });
+    }
+
+    function focusItem(index: number) {
+      const item = imageItems[index] as HTMLElement;
+      if (!item || !scrollContainer) return;
+      // preventScroll stops the browser's default instant jump-to-focus so
+      // the only scroll that happens is the smooth one below - active
+      // state updates immediately for feedback, then
+      // updateActiveFromScroll takes over again once the smooth scroll
+      // actually lands.
+      item.focus({ preventScroll: true });
+
+      // scrollIntoView() re-measures the target via getBoundingClientRect()
+      // on every frame of its "smooth" animation, and that rect includes
+      // the live transform: scale() the scroll handler above applies to
+      // whichever image is nearest center - including this one, mid-
+      // scroll. That turns the scroll target into a moving goalpost and
+      // the animation settles off by roughly one item. Computing the
+      // destination once, up front, keeps it stable. offsetTop can't be
+      // used here since it's relative to the nearest *positioned*
+      // ancestor - body (Layout.astro sets position: relative there), not
+      // this scroll container - so the item's position within the
+      // container is derived from getBoundingClientRect() plus the
+      // container's current scroll position instead.
+      const itemRect = item.getBoundingClientRect();
+      const containerRect = scrollContainer.getBoundingClientRect();
+      const itemOffsetInContainer =
+        scrollContainer.scrollTop + (itemRect.top - containerRect.top);
+      const targetScrollTop =
+        itemOffsetInContainer -
+        (scrollContainer.clientHeight - itemRect.height) / 2;
+
+      scrollContainer.scrollTo({ top: targetScrollTop, behavior: "smooth" });
+      setActive(index);
+    }
+
+    titleButtons.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        focusItem(Number((btn as HTMLElement).dataset.index));
+      });
+    });
+
+    imageItems.forEach((item) => {
+      item.addEventListener("focus", () => {
+        setActive(Number((item as HTMLElement).dataset.index));
+      });
+
+      item.addEventListener("keydown", (event) => {
+        const index = Number((item as HTMLElement).dataset.index);
+        let nextIndex = index;
+
+        switch ((event as KeyboardEvent).key) {
+          case "ArrowRight":
+            nextIndex = index + 1;
+            break;
+          case "ArrowLeft":
+            nextIndex = index - 1;
+            break;
+          case "ArrowDown":
+            nextIndex = index + columns;
+            break;
+          case "ArrowUp":
+            nextIndex = index - columns;
+            break;
+          default:
+            return;
+        }
+
+        if (nextIndex >= 0 && nextIndex < imageItems.length) {
+          event.preventDefault();
+          focusItem(nextIndex);
+        }
+      });
+    });
+
+    // On mobile the grid no longer scrolls internally (see the max-width
+    // media query), the page itself does - so the scale/active-tracking
+    // effect has to also listen on window scroll, not just the
+    // container's own scroll event.
+    scrollContainer?.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    updateScales();
+
+    cleanup = () => {
+      scrollContainer?.removeEventListener("scroll", onScroll);
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+    };
+  }
+
+  document.addEventListener("astro:page-load", initSectionPage);
+</script>
