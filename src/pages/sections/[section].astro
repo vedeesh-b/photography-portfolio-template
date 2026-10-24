@@ -10,7 +10,9 @@ const { images } = Astro.props;
 const sectionTitle = `${section.charAt(0).toUpperCase()}${section.slice(1)}`;
 const pageTitle = `${sectionTitle} Photography | Vedeesh Bali`;
 const pageDescription = `${sectionTitle} photography by Vedeesh Bali${
-  images[0]?.data.location ? `, shot in locations including ${images[0].data.location}` : ""
+  images[0]?.data.location
+    ? `, shot in locations including ${images[0].data.location}`
+    : ""
 }.`;
 
 export async function getStaticPaths() {
@@ -185,8 +187,10 @@ export async function getStaticPaths() {
   }
 
   @media (max-width: 768px) {
+    /* .section-layout already provides the 1.5rem gutter here, so the
+       heading needs no padding of its own to line up with the images. */
     h1 {
-      padding: 0 1.5rem;
+      padding: 0;
       font-size: 40px;
     }
 
@@ -210,6 +214,10 @@ export async function getStaticPaths() {
       overflow-y: visible;
       gap: 2rem;
       padding-bottom: 2rem;
+    }
+
+    .image-item .location {
+      padding-top: 4px;
     }
   }
 </style>
@@ -263,6 +271,13 @@ export async function getStaticPaths() {
     const PEAK_SCALE = 1.08;
     const FALLOFF_RANGE = 0.6; // fraction of container height over which the effect fades out
 
+    // On mobile the images span the full content width, so any scale-up
+    // spills into the 1.5rem side gutter and the caption offset eats into
+    // the gap below - the gutter and spacing would vary image to image.
+    // The grid also stops being its own scroll container there, so its
+    // "center" is no longer the viewport's. Keep images at rest instead.
+    const mobileQuery = window.matchMedia("(max-width: 768px)");
+
     let ticking = false;
 
     function updateScales() {
@@ -278,7 +293,9 @@ export async function getStaticPaths() {
         const imgCenter = imgRect.top + imgRect.height / 2;
         const distance = Math.abs(imgCenter - containerCenter);
         const proximity = Math.max(0, 1 - distance / falloffDistance);
-        const scale = 1 + (PEAK_SCALE - 1) * proximity;
+        const scale = mobileQuery.matches
+          ? 1
+          : 1 + (PEAK_SCALE - 1) * proximity;
 
         img.style.transform = `scale(${scale})`;
 

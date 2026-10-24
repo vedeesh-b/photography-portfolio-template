@@ -15,10 +15,15 @@ pnpm-debug.log*
 
 # environment variables
 .env
-.env.production
+.env.*
+!.env.example
 
 # macOS-specific files
 .DS_Store
 
 # jetbrains setting folder
 .idea/
+
+# /brag launch video output (renders, frames, intermediates)
+brag-output/
+brag-output-*/
